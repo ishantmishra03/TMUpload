@@ -19,11 +19,16 @@ const fileSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    cloudinaryId: {
+      type: String,
+      required: true,
+    },
+
     expiresInDays: {
       type: Number,
       default: 3,
       min: 1,
-      max: 7, 
+      max: 7,
     },
     expiresAt: {
       type: Date,

@@ -8,9 +8,9 @@ const auth = async (req, res, next) => {
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        if (decoded) {
-            next();
-        }
+        req.user = decoded;
+
+        next();
     } catch (error) {
         res.status(401).json({ success: false, message: "Token is invalid or expired" })
     }

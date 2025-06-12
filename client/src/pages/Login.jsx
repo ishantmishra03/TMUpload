@@ -1,14 +1,27 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAppContext } from "../context/AppContext";
+import { toast } from "react-hot-toast";
 
 const Login = () => {
+  const { axios, navigate, setIsLoggedIn } = useAppContext();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle login logic
-    console.log({ email, password });
+    try {
+      const { data } = await axios.post('/api/auth', { email, password });
+      if(data.success){
+        toast.success(data.message);
+        setIsLoggedIn(true);
+        navigate('/upload');
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   return (

@@ -6,6 +6,7 @@ import SecureRoute from "./components/Secure/SecureRoute";
 import Login from "./pages/Login";
 import Upload from "./pages/Upload";
 import File from './pages/File';
+import List from "./pages/List";
 
 const App = () => {
   return (
@@ -21,6 +22,11 @@ const App = () => {
         <Route path='/upload' element={
           <SecureRoute>
             <Upload />
+          </SecureRoute>
+        }/>
+        <Route path='/list' element={
+          <SecureRoute>
+            <List />
           </SecureRoute>
         }/>
       </Routes>
