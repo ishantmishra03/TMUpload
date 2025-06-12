@@ -13,6 +13,7 @@ import fileRouter from "./routes/file.routes.js";
 
 const allowedOrigins = [
     'http://localhost:5173',
+    process.env.VITE_FRONTEND_URL,
 ];
 
 
