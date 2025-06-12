@@ -5,6 +5,7 @@ import { useAppContext } from "../context/AppContext";
 const Upload = () => {
   const { axios, navigate } = useAppContext();
   const [file, setFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -15,6 +16,7 @@ const Upload = () => {
     if (!file) return toast.error("Upload file first");
 
     try {
+      setUploading(true);
       const formData = new FormData();
       formData.append("file", file);
       const { data } = await axios.post("/api/file/upload", formData);
@@ -26,6 +28,7 @@ const Upload = () => {
       toast.error(error.message);
     } finally {
       setFile(null);
+      setUploading(false);
     }
   };
 
@@ -39,7 +42,11 @@ const Upload = () => {
           Select a file to upload securely to TMUpload.
         </p>
 
-        <form onSubmit={handleUpload} className="space-y-6" encType="multipart/form-data">
+        <form
+          onSubmit={handleUpload}
+          className="space-y-6"
+          encType="multipart/form-data"
+        >
           <input
             type="file"
             name="file"
@@ -49,10 +56,11 @@ const Upload = () => {
           />
 
           <button
+            disabled={uploading}
             type="submit"
             className="w-full bg-yellow-400 hover:bg-yellow-300 text-black font-semibold py-2 rounded-lg transition"
           >
-            Upload
+            {uploading ? "Uploading..." : "Upload"}
           </button>
         </form>
       </div>
