@@ -1,4 +1,3 @@
-// models/file.model.js
 import mongoose from "mongoose";
 
 const fileSchema = new mongoose.Schema(
@@ -19,9 +18,9 @@ const fileSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    cloudinaryId: {
+    storageId: {
       type: String,
-      required: true,
+      required: false, 
     },
 
     expiresInDays: {

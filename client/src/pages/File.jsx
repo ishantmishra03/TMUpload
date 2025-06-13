@@ -24,7 +24,12 @@ const File = () => {
     fetchFileData();
   }, []);
 
-  if (!file) return <h1>Loading...</h1>;
+  if (!file)
+    return (
+      <div className="fixed inset-0 bg-blue-600 flex items-center justify-center z-50">
+        <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
 
   return (
     <main className="bg-gradient-to-br from-[#2e3a4c] to-[#1a2533] text-white min-h-screen  flex items-center justify-center px-4 py-16">
@@ -44,6 +49,7 @@ const File = () => {
               target="_blank"
               rel="noopener noreferrer"
               className="mt-1 inline-flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-black font-semibold px-8 rounded-full transition cursor-pointer"
+              download
             >
               <Download size={18} />
               Download
