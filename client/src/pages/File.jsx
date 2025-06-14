@@ -9,6 +9,7 @@ const File = () => {
   const { axios } = useAppContext();
   const [file, setFile] = useState(null);
 
+  //Fetch File Data from id from params
   const fetchFileData = async () => {
     try {
       const { data } = await axios.post(`/api/file/get`, { id });
@@ -18,6 +19,16 @@ const File = () => {
     } catch (error) {
       toast.error(error.message);
     }
+  };
+
+  //Download API Call
+  const handleDownload = () => {
+    const link = document.createElement("a");
+    link.href = `${import.meta.env.VITE_BACKEND_URL}/api/file/download/${id}`;
+    link.setAttribute("download", file.filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   useEffect(() => {
@@ -43,17 +54,12 @@ const File = () => {
           <p className="text-sm text-gray-400">
             Expires at {new Date(file.expiresAt).toLocaleString()}
           </p>
-          <button className="mt-6 flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-black font-semibold px-8 py-2 rounded-full transition cursor-pointer">
-            <a
-              href={file.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-1 inline-flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-black font-semibold px-8 rounded-full transition cursor-pointer"
-              download
-            >
-              <Download size={18} />
-              Download
-            </a>
+          <button
+            onClick={handleDownload}
+            className="mt-6 flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-black font-semibold px-8 py-2 rounded-full transition cursor-pointer"
+          >
+            <Download size={18} />
+            Download
           </button>
         </div>
       </div>

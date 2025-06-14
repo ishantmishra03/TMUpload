@@ -1,6 +1,7 @@
 import imagekit from "../config/imagekit.config.js";
 import File from '../models/file.models.js';
 import { v4 as uuidv4 } from 'uuid';
+import axios from 'axios';
 
 export const uploadFile = async (req, res) => {
   try {
@@ -20,7 +21,7 @@ export const uploadFile = async (req, res) => {
       folder: "/TMUpload",
     });
 
-    const downloadUrl = uploadResult.url + "?tr=fl-force-download";
+    const downloadUrl = uploadResult.url;
 
     
 
@@ -51,8 +52,6 @@ export const uploadFile = async (req, res) => {
     res.status(500).json({ success: false, message: 'Failed to upload file' });
   }
 };
-
-
 
 //List all uploads
 export const listFile = async (req, res) => {
@@ -86,4 +85,27 @@ export const getFileData = async (req, res) => {
     return res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
+
+//Download File
+export const downloadFile = async (req, res) => {
+  try {
+    const file = await File.findById(req.params.id);
+    if (!file) return res.status(404).send('File not found');
+
+    const response = await axios({
+      method: 'GET',
+      url: file.url, 
+      responseType: 'stream', 
+    });
+
+    res.setHeader('Content-Disposition', `attachment; filename="${file.filename}"`);
+    res.setHeader('Content-Type', file.mimetype);
+
+    response.data.pipe(res);
+  } catch (error) {
+    console.error('Error downloading file:', error.message);
+    res.status(500).send('Failed to download file');
+  }
+};
+
 
