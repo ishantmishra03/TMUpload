@@ -13,25 +13,22 @@ export const uploadFile = async (req, res) => {
     const uniqueFilename = `${uuidv4()}_${originalname}`;
     const expiresInDays = 3;
 
-    const base64File = buffer.toString('base64');
-
     const uploadResult = await imagekit.upload({
-      file: base64File,
+      file: buffer,
       fileName: uniqueFilename,
       folder: "/TMUpload",
     });
 
-    const downloadUrl = uploadResult.url;
-
-    
+    const downloadUrl = `${uploadResult.url}?response-content-disposition=attachment`;
 
     const fileDoc = await File.create({
       filename: originalname,
       size,
       mimetype,
       url: downloadUrl,
-      storageId: uploadResult.fileId, 
+      storageId: uploadResult.fileId,
       expiresInDays,
+      name: uploadResult.name,
     });
 
 
@@ -86,26 +83,28 @@ export const getFileData = async (req, res) => {
   }
 };
 
-//Download File
+//DownloadFile
 export const downloadFile = async (req, res) => {
   try {
-    const file = await File.findById(req.params.id);
-    if (!file) return res.status(404).send('File not found');
+    const { id } = req.params;
 
-    const response = await axios({
-      method: 'GET',
-      url: file.url, 
-      responseType: 'stream', 
-    });
+    const file = await File.findById(id);
+    if (!file) {
+      return res.status(404).json({ success: false, message: "File not found" });
+    }
 
-    res.setHeader('Content-Disposition', `attachment; filename="${file.filename}"`);
-    res.setHeader('Content-Type', file.mimetype);
+    const response = await axios.get(file.url, { responseType: "stream" });
+
+    res.setHeader("Content-Disposition", `attachment; filename="${file.filename}"`);
+    res.setHeader("Content-Type", file.mimetype);
 
     response.data.pipe(res);
   } catch (error) {
-    console.error('Error downloading file:', error.message);
-    res.status(500).send('Failed to download file');
+    console.error("Download error:", error.message);
+    res.status(500).json({ success: false, message: "Failed to download file" });
   }
 };
+
+
 
 
