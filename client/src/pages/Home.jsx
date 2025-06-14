@@ -22,7 +22,7 @@ const Home = () => {
             building, not managing infrastructure.
           </p>
           <Link
-            to="/login"
+            to="/"
             className="inline-block bg-yellow-400 hover:bg-yellow-300 text-black font-semibold px-8 py-3 rounded-full text-lg transition shadow-md"
           >
             Get Started
