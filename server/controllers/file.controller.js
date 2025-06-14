@@ -95,7 +95,7 @@ export const downloadFile = async (req, res) => {
 
     const response = await axios.get(file.url, { responseType: "stream" });
 
-    res.setHeader("Content-Disposition", `attachment; filename="${file.filename}"`);
+    res.setHeader("Content-Disposition", `attachment; filename="${file.name}"`);
     res.setHeader("Content-Type", file.mimetype);
 
     response.data.pipe(res);

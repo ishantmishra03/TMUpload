@@ -31,7 +31,7 @@ const File = () => {
       const a = document.createElement("a");
 
       a.href = downloadUrl;
-      a.download = file.filename; // Use original filename
+      a.download = file.name;
       document.body.appendChild(a);
       a.click();
       a.remove();
